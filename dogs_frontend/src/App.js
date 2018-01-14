@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { DogList, DogShow, Form } from './DogList'
+import DeleteableDogCard from './DeleteableDogCard'
 // import { DogShow } from './DogShow'
+import { DogList, Form} from './DogList'
+
+
 const URL = 'http://localhost:3000/api/v1/dogs'
 class App extends Component {
   constructor() {
@@ -14,7 +17,6 @@ class App extends Component {
       newDog: false,
       newBreed: '',
       newImage: '',
-      newDog: null
     }
   }
 
@@ -26,7 +28,7 @@ class App extends Component {
 
   postNewDog = (breed, image) => {
     return (
-      fetch('http://localhost:3000/api/v1/dogs', {
+      fetch(URL, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -37,10 +39,24 @@ class App extends Component {
     )
   }
 
+  deleteDog = (id) => {
+    return (
+      fetch(URL + `/${id}`, {
+        method: 'DELETE'
+      }).then(resp => resp.json())
+    )
+  }
+
   handleDogShow = (event) => {
     const id = parseInt(event.target.id)
     const showDog = this.state.dogs.filter(dog => dog.id === id)[0]
     this.setState({ showDog })
+  }
+
+  handleDelete = (event) => {
+    const id = parseInt(event.target.id)
+    this.deleteDog(id)
+    this.setState({ dogs: this.state.dogs.filter(dog => dog.id !== id)}, () => console.log(this.state.dogs) )
   }
 
   buttonHandle = () => {
@@ -57,8 +73,6 @@ class App extends Component {
     })
 
   }
-
-
 
   handleNewBreed = (event) => {
     this.setState({ newBreed : event.target.value})
@@ -84,7 +98,7 @@ class App extends Component {
               />
             </div>
             <div className="col-md-6">
-              { this.state.showDog ? <DogShow showDog={this.state.showDog} /> : null}
+              { this.state.showDog ? <DeleteableDogCard handleDelete={this.handleDelete} showDog={this.state.showDog} /> : null}
             </div>
             <div className="col-md-3">
               <button onClick={this.buttonHandle}>New Dog</button>

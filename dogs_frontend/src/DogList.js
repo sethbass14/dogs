@@ -11,11 +11,21 @@ export const DogList = (props) => {
   )
 }
 
-export const DogShow = ({ showDog }) => {
+export const DogShow = (props) => {
   return (
     <div className="dog-show">
-      <h1>{showDog.breed}</h1>
-      <img src={showDog.image}/>
+      <h1>{props.showDog.breed}</h1>
+      <img src={props.showDog.image}/>
+      <button id={props.showDog.id} onClick={props.changeDelete}>Delete Dog</button>
+    </div>
+  )
+}
+
+export const DeletedDog = (props) => {
+  return (
+    <div className="deleted-dog">
+      <h2>Your dog has been 'Yellerd'</h2>
+      <img src="https://literaryhoarders.files.wordpress.com/2013/11/image.jpg"></img>
     </div>
   )
 }
