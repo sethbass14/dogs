@@ -21,6 +21,7 @@ export const DogShow = (props) => {
   )
 }
 
+//This image needs to be set in the state.
 export const DeletedDog = (props) => {
   return (
     <div className="deleted-dog">
@@ -35,9 +36,9 @@ export const Form = (props) => {
     <div className= "new-dog" >
       <form onSubmit={props.handleSubmit}>
         <label>Breed</label>
-        <input type="text" name="newBreed" value={props.newBreed} onChange={props.handleNewBreed}></input>
+        <input type="text" name="newBreed" value={props.newBreed} onChange={props.handleFormChange}></input>
         <label>Image URL</label>
-        <input type="text" name="newImage" value={props.newImage} onChange={props.handleNewImage}></input>
+        <input type="text" name="newImage" value={props.newImage} onChange={props.handleFormChange}></input>
         <button type="submit">Submit</button>
       </form>
     </div>

@@ -17,6 +17,7 @@ class App extends Component {
       newDog: false,
       newBreed: '',
       newImage: '',
+
     }
   }
 
@@ -25,6 +26,19 @@ class App extends Component {
       .then(resp => resp.json())
         .then(data => this.setState({ dogs: data }))
   }
+
+  dogSort = () => {
+    this.state.dogs.sort(function (a,b) {
+      console.log(a, b)
+    if (a.breed > b.breed) {
+      return -1
+    }
+    if (a.breed < b.breed) {
+      return 1
+    }
+    return 0
+  })
+}
 
   postNewDog = (breed, image) => {
     return (
@@ -56,11 +70,13 @@ class App extends Component {
   handleDelete = (event) => {
     const id = parseInt(event.target.id)
     this.deleteDog(id)
-    this.setState({ dogs: this.state.dogs.filter(dog => dog.id !== id)}, () => console.log(this.state.dogs) )
+    this.setState({
+      dogs: this.state.dogs.filter(dog => dog.id !== id),
+    }, () => console.log(this.state.dogs) )
   }
 
   buttonHandle = () => {
-    this.setState({ newDog: true})
+    this.setState({ newDog: !this.state.newDog})
   }
 
   handleSubmit = (event) => {
@@ -68,21 +84,22 @@ class App extends Component {
     console.log('submit')
     this.postNewDog(this.state.newBreed, this.state.newImage).then( dog => {
       this.setState({
-        dogs: [...this.state.dogs, dog]
-      })
+        dogs: [...this.state.dogs, dog],
+        showDog: dog,
+        newBreed: '',
+        newImage: ''
+      }, this.dogSort())
     })
-
+    this.buttonHandle()
   }
 
-  handleNewBreed = (event) => {
-    this.setState({ newBreed : event.target.value})
-  }
 
-  handleNewImage = (event) => {
-    this.setState({ newImage : event.target.value})
+  handleFormChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value }, () => console.log(this.state))
   }
 
   render() {
+    // console.log(this.state.dogs)
     return (
       <div className="App">
         <header className="App-header">
@@ -105,8 +122,7 @@ class App extends Component {
               {this.state.newDog ?
                 <Form
                   handleSubmit={this.handleSubmit}
-                  handleNewBreed={this.handleNewBreed}
-                  handleNewImage={this.handleNewImage}
+                  handleFormChange={this.handleFormChange}
                   newBreed={this.state.newBreed}
                   newImage={this.state.newImage}
                 /> : null}
